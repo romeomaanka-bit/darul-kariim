@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings — Darul-Kariim</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root { --sidebar-bg: #1e293b; --emerald: #10b981; }
+        body { background-color: #f1f5f9; font-family: system-ui, -apple-system, sans-serif; }
+        .sidebar { width: 260px; background-color: var(--sidebar-bg); min-height: 100vh; position: fixed; top: 0; left: 0; z-index: 100; color: #cbd5e1; }
+        .sidebar-brand { padding: 20px; font-size: 1.25rem; font-weight: bold; color: #fff; border-bottom: 1px solid #334155; }
+        .sidebar-nav { padding: 15px 10px; list-style: none; margin: 0; }
+        .sidebar-nav li a { display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: #94a3b8; text-decoration: none; border-radius: 8px; font-size: 0.95rem; margin-bottom: 4px; }
+        .sidebar-nav li a:hover, .sidebar-nav li a.active { background-color: #334155; color: #fff; }
+        .main-content { margin-left: 260px; padding: 20px; }
+        .top-navbar { background: #ffffff; padding: 12px 25px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+        .card-box { background: #ffffff; border-radius: 10px; padding: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: none; max-width: 600px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-brand d-flex align-items-center gap-2">
+            <i class="fa-solid fa-graduation-cap text-success"></i>
+            <span>DARUL-KARIIM</span>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="/index.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+            <li><a href="/students.html"><i class="fa-solid fa-users"></i> Students</a></li>
+            <li><a href="/teachers.html"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a></li>
+            <li><a href="/settings.html" class="active"><i class="fa-solid fa-gear"></i> Settings</a></li>
+            <li><a href="#" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="top-navbar">
+            <h5 class="fw-bold m-0 text-dark">Nidaamka Dejinta (Settings)</h5>
+        </div>
+
+        <div id="alertMessage"></div>
+
+        <!-- Foomka Beddelida Magaca (Username) -->
+        <div class="card-box">
+            <h6 class="fw-bold mb-3 text-secondary">Beddel Magaca Isticmaalaha (Change Username)</h6>
+            <form id="usernameForm">
+                <div class="mb-3">
+                    <label class="form-label">Username-ka Cusub</label>
+                    <input type="text" class="form-control" id="newUsername" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Beddel Magaca</button>
+            </form>
+        </div>
+
+        <!-- Foomka Beddelida Passwordka -->
+        <div class="card-box">
+            <h6 class="fw-bold mb-3 text-secondary">Beddel Erayga Sirta ah (Change Password)</h6>
+            <form id="passwordForm">
+                <div class="mb-3">
+                    <label class="form-label">Erayga Sirta ah ee Cusub</label>
+                    <input type="password" class="form-control" id="newPassword" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Erayga sirta cusub markale ku celi</label>
+                    <input type="password" class="form-control" id="confirmPassword" required>
+                </div>
+                <button type="submit" class="btn btn-success w-100">Beddel Erayga Sirta ah</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = '/login.html';
+
+        const alertBox = document.getElementById('alertMessage');
+
+        // Beddelida Username-ka
+        document.getElementById('usernameForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newUsername = document.getElementById('newUsername').value;
+
+            try {
+                const res = await fetch('/api/settings/update-username', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ newUsername })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    alertBox.innerHTML = `<div class="alert alert-success">Magaca si guul leh ayaa loo beddelay! Fadlan dib ugu soo gal.</div>`;
+                    setTimeout(() => { localStorage.clear(); window.location.href = '/login.html'; }, 2000);
+                } else {
+                    alertBox.innerHTML = `<div class="alert alert-danger">${data.message}</div>`;
+                }
+            } catch (err) {
+                alertBox.innerHTML = `<div class="alert alert-danger">Khalad xagga server-ka ah</div>`;
+            }
+        });
+
+        // Beddelida Password-ka
+        document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword !== confirmPassword) {
+                alertBox.innerHTML = `<div class="alert alert-danger">Erayada sirta ah ee cusub isku mid ma aha!</div>`;
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/settings/update-password', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ newPassword })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    alertBox.innerHTML = `<div class="alert alert-success">Password-ka si guul leh ayaa loo beddelay! Fadlan dib ugu soo gal.</div>`;
+                    setTimeout(() => { localStorage.clear(); window.location.href = '/login.html'; }, 2000);
+                } else {
+                    alertBox.innerHTML = `<div class="alert alert-danger">${data.message}</div>`;
+                }
+            } catch (err) {
+                alertBox.innerHTML = `<div class="alert alert-danger">Khalad xagga server-ka ah</div>`;
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = '/login.html';
+        });
+    </script>
+</body>
+</html>

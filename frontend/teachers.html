@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teachers — Darul-Kariim School</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root { --sidebar-bg: #1e293b; }
+        body { background-color: #f1f5f9; font-family: system-ui, -apple-system, sans-serif; }
+        .sidebar { width: 260px; background-color: var(--sidebar-bg); min-height: 100vh; position: fixed; top: 0; left: 0; z-index: 100; color: #cbd5e1; }
+        .sidebar-brand { padding: 20px; font-size: 1.25rem; font-weight: bold; color: #fff; border-bottom: 1px solid #334155; }
+        .sidebar-nav { padding: 15px 10px; list-style: none; margin: 0; }
+        .sidebar-nav li a { display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: #94a3b8; text-decoration: none; border-radius: 8px; font-size: 0.95rem; margin-bottom: 4px; }
+        .sidebar-nav li a:hover, .sidebar-nav li a.active { background-color: #334155; color: #fff; }
+        .main-content { margin-left: 260px; padding: 25px; }
+        .card { border: none; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-brand d-flex align-items-center gap-2">
+            <i class="fa-solid fa-graduation-cap text-success"></i>
+            <span>DARUL-KARIIM</span>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="/index.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+            <li><a href="/students.html"><i class="fa-solid fa-users"></i> Students</a></li>
+            <li><a href="/teachers.html" class="active"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a></li>
+            <li><a href="#" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold text-dark">Maamulka Macallimiinta (Teachers Management)</h4>
+            <button class="btn btn-success btn-sm" onclick="openAddModal()">
+                <i class="fa-solid fa-plus me-1"></i> Ku dar Macallin Cusub
+            </button>
+        </div>
+
+        <div class="card p-3">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Teacher ID</th>
+                            <th>Magaca Buuxa</th>
+                            <th>Maaddada</th>
+                            <th>Telefoonka</th>
+                            <th>Xaaladda</th>
+                            <th>Tallaabooyin</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teacherTableBody">
+                        <!-- Xogta waxaa keenaya JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal-ka Macallin Ku Darida / Wax Ka Beddelka -->
+    <div class="modal fade" id="addTeacherModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Diiwaangelinta Macallin Cusub</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="teacherForm">
+                        <input type="hidden" id="teacherDbId">
+                        <div class="mb-2">
+                            <label class="small fw-semibold">Magaca Koowaad</label>
+                            <input type="text" id="firstName" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="small fw-semibold">Magaca Dambe</label>
+                            <input type="text" id="lastName" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="small fw-semibold">Jinsiga</label>
+                            <select id="gender" class="form-select form-select-sm">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label class="small fw-semibold">Maaddada (Subject)</label>
+                            <input type="text" id="subject" class="form-control form-control-sm" placeholder="Tusaale: Xisaab" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="small fw-semibold">Shahaadada (Qualification)</label>
+                            <input type="text" id="qualification" class="form-control form-control-sm" placeholder="Tusaale: Bachelor of Education">
+                        </div>
+                        <div class="mb-2">
+                            <label class="small fw-semibold">Xaaladda (Status)</label>
+                            <select id="status" class="form-select form-select-sm">
+                                <option value="Active">Active</option>
+                                <option value="On Leave">On Leave</option>
+                                <option value="Resigned">Resigned</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label class="small fw-semibold">Telefoonka</label>
+                            <input type="text" id="phone" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="small fw-semibold">Degmada/Cinwaanka</label>
+                            <input type="text" id="address" class="form-control form-control-sm" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 btn-sm" id="saveBtn">Keydi Macallinka</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = '/login.html';
+
+        let teachersList = [];
+
+        async function fetchTeachers() {
+            try {
+                const res = await fetch('/api/teachers', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const result = await res.json();
+                if (result.success) {
+                    teachersList = result.data;
+                    const tbody = document.getElementById('teacherTableBody');
+                    if (teachersList.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-4">Wali macallin lama diiwaangelin.</td></tr>`;
+                        return;
+                    }
+                    tbody.innerHTML = teachersList.map(t => `
+                        <tr>
+                            <td>${t.teacherId}</td>
+                            <td>${t.firstName} ${t.lastName}</td>
+                            <td>${t.subject}</td>
+                            <td>${t.phone}</td>
+                            <td><span class="badge bg-${t.status === 'Active' ? 'success' : (t.status === 'On Leave' ? 'warning' : 'danger')}">${t.status}</span></td>
+                            <td>
+                                <button class="btn btn-outline-primary btn-sm me-1" onclick="openEditModal('${t._id}')">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm" onclick="deleteTeacher('${t._id}')">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error('Khalad ayaa dhacay:', err);
+            }
+        }
+
+        function openAddModal() {
+            document.getElementById('teacherForm').reset();
+            document.getElementById('teacherDbId').value = '';
+            document.getElementById('status').value = 'Active';
+            document.getElementById('modalTitle').innerText = 'Diiwaangelinta Macallin Cusub';
+            document.getElementById('saveBtn').innerText = 'Keydi Macallinka';
+            new bootstrap.Modal(document.getElementById('addTeacherModal')).show();
+        }
+
+        function openEditModal(id) {
+            const teacher = teachersList.find(t => t._id === id);
+            if (!teacher) return;
+
+            document.getElementById('teacherDbId').value = teacher._id;
+            document.getElementById('firstName').value = teacher.firstName || '';
+            document.getElementById('lastName').value = teacher.lastName || '';
+            document.getElementById('gender').value = teacher.gender || 'Male';
+            document.getElementById('subject').value = teacher.subject || '';
+            document.getElementById('qualification').value = teacher.qualification || '';
+            document.getElementById('status').value = teacher.status || 'Active';
+            document.getElementById('phone').value = teacher.phone || '';
+            document.getElementById('address').value = teacher.address || '';
+
+            document.getElementById('modalTitle').innerText = 'Wax Ka Beddelka Macallinka';
+            document.getElementById('saveBtn').innerText = 'Cusboonaysii Macallinka';
+            new bootstrap.Modal(document.getElementById('addTeacherModal')).show();
+        }
+
+        document.getElementById('teacherForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const teacherDbId = document.getElementById('teacherDbId').value;
+            const teacherData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                gender: document.getElementById('gender').value,
+                subject: document.getElementById('subject').value,
+                qualification: document.getElementById('qualification').value,
+                status: document.getElementById('status').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value
+            };
+
+            const url = teacherDbId ? `/api/teachers/${teacherDbId}` : '/api/teachers';
+            const method = teacherDbId ? 'PUT' : 'POST';
+
+            try {
+                const res = await fetch(url, {
+                    method: method,
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(teacherData)
+                });
+                const result = await res.json();
+                if (result.success) {
+                    bootstrap.Modal.getInstance(document.getElementById('addTeacherModal')).hide();
+                    fetchTeachers();
+                } else {
+                    alert(result.message);
+                }
+            } catch (err) {
+                console.error('Khalad ayaa dhacay:', err);
+            }
+        });
+
+        async function deleteTeacher(id) {
+            if (confirm('Ma hubtaa inaad tirtirto macallinkan?')) {
+                try {
+                    const res = await fetch(`/api/teachers/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const result = await res.json();
+                    if (result.success) {
+                        fetchTeachers();
+                    }
+                } catch (err) {
+                    console.error('Khalad tirtirid ah:', err);
+                }
+            }
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = '/login.html';
+        });
+
+        fetchTeachers();
+    </script>
+</body>
+</html>
