@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "Darul-Kariim School Management System - Full Stack Application",
   "main": "backend/server.js",
-  "scripts": {
+ "scripts": {
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js",
-    "seed": "node backend/utils/seed.js"
+    "seed": "node backend/utils/seed.js",
+    "build": "echo 'Build completed successfully'"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
