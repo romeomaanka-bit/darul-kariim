@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwalka Iskuulka — Darul-Kariim</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root { --sidebar-bg: #1e293b; --emerald: #10b981; }
+        body { background-color: #f1f5f9; font-family: system-ui, -apple-system, sans-serif; }
+        .sidebar { width: 260px; background-color: var(--sidebar-bg); min-height: 100vh; position: fixed; top: 0; left: 0; z-index: 100; color: #cbd5e1; }
+        .sidebar-brand { padding: 20px; font-size: 1.25rem; font-weight: bold; color: #fff; border-bottom: 1px solid #334155; }
+        .sidebar-nav { padding: 15px 10px; list-style: none; margin: 0; }
+        .sidebar-nav li a { display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: #94a3b8; text-decoration: none; border-radius: 8px; font-size: 0.95rem; margin-bottom: 4px; }
+        .sidebar-nav li a:hover, .sidebar-nav li a.active { background-color: #334155; color: #fff; }
+        .main-content { margin-left: 260px; padding: 20px; }
+        .top-navbar { background: #ffffff; padding: 12px 25px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+        .card { border: none; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand d-flex align-items-center gap-2">
+            <i class="fa-solid fa-graduation-cap text-success"></i>
+            <span>DARUL-KARIIM</span>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="/index.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+            <li><a href="/students.html"><i class="fa-solid fa-users"></i> Students</a></li>
+            <li><a href="/classes.html"><i class="fa-solid fa-chalkboard"></i> Classes</a></li>
+            <li><a href="/subjects.html"><i class="fa-solid fa-book"></i> Subjects</a></li>
+            <li><a href="/teachers.html"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a></li>
+            <li><a href="/exams.html"><i class="fa-solid fa-file-pen"></i> Exams</a></li>
+            <li><a href="/results.html"><i class="fa-solid fa-square-poll-vertical"></i> Results</a></li>
+            <li><a href="/timetable.html" class="active"><i class="fa-solid fa-calendar-days"></i> Timetable</a></li>
+            <li><a href="/fees.html"><i class="fa-solid fa-money-bill-wave"></i> Fees</a></li>
+            <li><a href="/attendance.html"><i class="fa-solid fa-clipboard-user"></i> Attendance</a></li>
+            <li><a href="/settings.html"><i class="fa-solid fa-gear"></i> Settings</a></li>
+            <li><a href="#" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="top-navbar">
+            <h5 class="fw-bold m-0 text-dark">Jadwalka Fasallada (School Timetable)</h5>
+            <span class="fw-semibold" id="userName">Administrator</span>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-12">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold m-0 text-dark">Jadwalka Maalinlaha ah ee Maaddooyinka</h6>
+                        <button class="btn btn-success btn-sm fw-semibold" data-bs-toggle="modal" data-bs-target="#timetableModal" onclick="openAddModal()">
+                            <i class="fa-solid fa-plus me-1"></i> Ku Dar Jadwal
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Fasalka</th>
+                                    <th>Maalinta</th>
+                                    <th>Maaddada</th>
+                                    <th>Macallinka</th>
+                                    <th>Waqtiga (Saacadda)</th>
+                                    <th class="text-end">Tallaabooyinka</th>
+                                </tr>
+                            </thead>
+                            <tbody id="timetableTableBody">
+                                <!-- Xogta ayaa halkan ka soo bixi doonta -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal-ka Ku Darida Jadwalka -->
+    <div class="modal fade" id="timetableModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="formTitle">Ku Dar Jadwal Cusub</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="timetableForm">
+                        <input type="hidden" id="timetableId">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Fasalka:</label>
+                            <select class="form-select" id="tableClass" required>
+                                <option value="">-- Dooro Fasalka --</option>
+                                <optgroup label="Primary (Gerd)">
+                                    <option value="Gerd 1">Gerd 1</option>
+                                    <option value="Gerd 2">Gerd 2</option>
+                                    <option value="Gerd 3">Gerd 3</option>
+                                    <option value="Gerd 4">Gerd 4</option>
+                                    <option value="Gerd 5">Gerd 5</option>
+                                    <option value="Gerd 6">Gerd 6</option>
+                                    <option value="Gerd 7">Gerd 7</option>
+                                    <option value="Gerd 8">Gerd 8</option>
+                                </optgroup>
+                                <optgroup label="Secondary (Form)">
+                                    <option value="Form 1">Form 1</option>
+                                    <option value="Form 2">Form 2</option>
+                                    <option value="Form 3">Form 3</option>
+                                    <option value="Form 4">Form 4</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Maalinta:</label>
+                            <select class="form-select" id="tableDay" required>
+                                <option value="">-- Dooro Maalinta --</option>
+                                <option value="Sabti">Sabti</option>
+                                <option value="Axad">Axad</option>
+                                <option value="Isniin">Isniin</option>
+                                <option value="Talaado">Talaado</option>
+                                <option value="Arbaco">Arbaco</option>
+                                <option value="Khamiis">Khamiis</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Maaddada:</label>
+                            <select class="form-select" id="tableSubject" required>
+                                <option value="">-- Dooro Maaddada --</option>
+                                <option value="Tarbiya">Tarbiya</option>
+                                <option value="Xisaab (Math)">Xisaab (Math)</option>
+                                <option value="Soomaali">Soomaali</option>
+                                <option value="Carabi">Carabi</option>
+                                <option value="English">English</option>
+                                <option value="Science">Science</option>
+                                <option value="Juqraafi">Juqraafi</option>
+                                <option value="Taariikh">Taariikh</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Magaca Macallinka:</label>
+                            <input type="text" class="form-control" id="tableTeacher" required placeholder="Tusaale: Macallin Cabdalla">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Waqtiga (Saacadda):</label>
+                            <input type="text" class="form-control" id="tableTime" required placeholder="Tusaale: 08:00 AM - 08:45 AM">
+                        </div>
+                        <div class="modal-footer px-0 pb-0">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ka Noqo</button>
+                            <button type="submit" class="btn btn-success fw-semibold" id="submitBtn">Keydi Jadwalka</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = '/login.html';
+
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user.username) document.getElementById('userName').textContent = user.username;
+
+        let timetableGlobal = [];
+        const timetableModal = new bootstrap.Modal(document.getElementById('timetableModal'));
+
+        async function fetchTimetable() {
+            try {
+                const res = await fetch('/api/timetable', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const result = await res.json();
+                timetableGlobal = result.data || [];
+                
+                const tbody = document.getElementById('timetableTableBody');
+                tbody.innerHTML = '';
+
+                if (timetableGlobal.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-4">Wali jadwal lama diiwaangelin.</td></tr>`;
+                    return;
+                }
+
+                timetableGlobal.forEach(item => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><span class="badge bg-secondary">${item.tableClass}</span></td>
+                            <td class="fw-semibold text-success">${item.tableDay}</td>
+                            <td>${item.tableSubject}</td>
+                            <td>${item.tableTeacher}</td>
+                            <td><small class="text-muted fw-semibold">${item.tableTime}</small></td>
+                            <td class="text-end">
+                                <button class="btn btn-sm btn-outline-primary me-1" onclick="openEditModal('${item._id}')">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteTimetable('${item._id}')">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error('Error fetching timetable:', err);
+            }
+        }
+
+        function openAddModal() {
+            document.getElementById('timetableForm').reset();
+            document.getElementById('timetableId').value = '';
+            document.getElementById('formTitle').textContent = 'Ku Dar Jadwal Cusub';
+            document.getElementById('submitBtn').textContent = 'Keydi Jadwalka';
+        }
+
+        function openEditModal(id) {
+            const item = timetableGlobal.find(t => t._id === id);
+            if (!item) return;
+
+            document.getElementById('timetableId').value = item._id;
+            document.getElementById('tableClass').value = item.tableClass;
+            document.getElementById('tableDay').value = item.tableDay;
+            document.getElementById('tableSubject').value = item.tableSubject;
+            document.getElementById('tableTeacher').value = item.tableTeacher;
+            document.getElementById('tableTime').value = item.tableTime;
+
+            document.getElementById('formTitle').textContent = 'Wax Ka Beddel Jadwalka';
+            document.getElementById('submitBtn').textContent = 'Cusbooneysii';
+            timetableModal.show();
+        }
+
+        async function deleteTimetable(id) {
+            if (!confirm('Ma hubtaa inaad tirtirto jadwalkan?')) return;
+            try {
+                const res = await fetch(`/api/timetable/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) fetchTimetable();
+                else alert('Cillad ayaa dhacday');
+            } catch (err) {
+                console.error('Error deleting timetable:', err);
+            }
+        }
+
+        document.getElementById('timetableForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('timetableId').value;
+            const tableClass = document.getElementById('tableClass').value;
+            const tableDay = document.getElementById('tableDay').value;
+            const tableSubject = document.getElementById('tableSubject').value;
+            const tableTeacher = document.getElementById('tableTeacher').value;
+            const tableTime = document.getElementById('tableTime').value;
+
+            try {
+                let url = '/api/timetable';
+                let method = id ? 'PUT' : 'POST';
+                if (id) url = `/api/timetable/${id}`;
+
+                const res = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ tableClass, tableDay, tableSubject, tableTeacher, tableTime })
+                });
+
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    timetableModal.hide();
+                    fetchTimetable();
+                } else {
+                    alert(data.message || 'Cillad ayaa dhacday');
+                }
+            } catch (err) {
+                console.error('Error saving timetable:', err);
+            }
+        });
+
+        fetchTimetable();
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = '/login.html';
+        });
+    </script>
+</body>
+</html>

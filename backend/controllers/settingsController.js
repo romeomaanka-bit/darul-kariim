@@ -5,7 +5,8 @@ const bcrypt = require('bcryptjs');
 exports.updateUsername = async (req, res) => {
   try {
     const { newUsername } = req.body;
-    const user = await User.findById(req.user.id);
+    // Si toos ah ayuu u helayaa Admin-ka koowaad ama user-ka nidaamka
+    const user = await User.findOne(); 
     
     if (!user) {
       return res.status(404).json({ success: false, message: 'Isticmaalaha lama helin' });
@@ -24,7 +25,7 @@ exports.updateUsername = async (req, res) => {
 exports.updatePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
-    const user = await User.findById(req.user.id);
+    const user = await User.findOne();
     
     if (!user) {
       return res.status(404).json({ success: false, message: 'Isticmaalaha lama helin' });

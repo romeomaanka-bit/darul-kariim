@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Management & Insights — Darul-Kariim</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root { --sidebar-bg: #1e293b; --emerald: #10b981; }
+        body { background-color: #f1f5f9; font-family: system-ui, -apple-system, sans-serif; }
+        .sidebar { width: 260px; background-color: var(--sidebar-bg); min-height: 100vh; position: fixed; top: 0; left: 0; z-index: 100; color: #cbd5e1; }
+        .sidebar-brand { padding: 20px; font-size: 1.25rem; font-weight: bold; color: #fff; border-bottom: 1px solid #334155; }
+        .sidebar-nav { padding: 15px 10px; list-style: none; margin: 0; }
+        .sidebar-nav li a { display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: #94a3b8; text-decoration: none; border-radius: 8px; font-size: 0.95rem; margin-bottom: 4px; }
+        .sidebar-nav li a:hover, .sidebar-nav li a.active { background-color: #334155; color: #fff; }
+        .main-content { margin-left: 260px; padding: 20px; }
+        .top-navbar { background: #ffffff; padding: 12px 25px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+        .card { border: none; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .ai-header { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #fff; border-radius: 10px; padding: 25px; margin-bottom: 25px; }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand d-flex align-items-center gap-2">
+            <i class="fa-solid fa-graduation-cap text-success"></i>
+            <span>DARUL-KARIIM</span>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="/index.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+            <li><a href="/students.html"><i class="fa-solid fa-users"></i> Students</a></li>
+            <li><a href="/classes.html"><i class="fa-solid fa-chalkboard"></i> Classes</a></li>
+            <li><a href="/subjects.html"><i class="fa-solid fa-book"></i> Subjects</a></li>
+            <li><a href="/teachers.html"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a></li>
+            <li><a href="/exams.html"><i class="fa-solid fa-file-pen"></i> Exams</a></li>
+            <li><a href="/results.html"><i class="fa-solid fa-square-poll-vertical"></i> Results</a></li>
+            <li><a href="/timetable.html"><i class="fa-solid fa-calendar-days"></i> Timetable</a></li>
+            <li><a href="/fees.html"><i class="fa-solid fa-money-bill-wave"></i> Fees</a></li>
+            <li><a href="/attendance.html"><i class="fa-solid fa-clipboard-user"></i> Attendance</a></li>
+            <li><a href="/ai.html" class="active"><i class="fa-solid fa-brain text-info"></i> AI Hub & Insights</a></li>
+            <li><a href="/settings.html"><i class="fa-solid fa-gear"></i> Settings</a></li>
+            <li><a href="#" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="top-navbar">
+            <h5 class="fw-bold m-0 text-dark">Nidaamka Sirdoonka Macmalka (AI Hub & Analytics)</h5>
+            <span class="fw-semibold" id="userName">Administrator</span>
+        </div>
+
+        <!-- AI Banner -->
+        <div class="ai-header">
+            <h4><i class="fa-solid fa-brain text-info me-2"></i> Xarunta Falanqaynta AI</h4>
+            <p class="text-muted mb-0 small">Halkan waxaa ku kulmaya xogta ay soo gudbiyaan macallimiinta, waalidiinta, iyo maamulka, taasoo uu AI-gu u falanqeeyo si waxtar leh.</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Qaybta Loo Isticmaalo In Xog Lagu Soo Gudbiyo -->
+            <div class="col-md-5">
+                <div class="card p-4">
+                    <h5 class="fw-bold mb-3 text-dark"><i class="fa-solid fa-paper-plane text-success me-2"></i> Soo Gudbi Xog / Talo</h5>
+                    <form id="aiFeedbackForm">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Nooca Qofka (Sender):</label>
+                            <select class="form-select" id="senderType" required>
+                                <option value="">-- Dooro --</option>
+                                <option value="Macallin">Macallin</option>
+                                <option value="Waalid">Waalid</option>
+                                <option value="Maamul">Maamul</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Magacaaga:</label>
+                            <input type="text" class="form-control" id="senderName" required placeholder="Tusaale: Macallin Axmed ama Hooyo Faadumo">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Qaybta (Category):</label>
+                            <input type="text" class="form-control" id="category" required placeholder="Tusaale: Natiijada Imtixaanka / Anshaxa">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Fariintaada ama Cabashadaada:</label>
+                            <textarea class="form-control" id="message" rows="4" required placeholder="Qor halkan faahfaahinta xogta aad rabto in maamulku iyo AI arkaan..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 fw-semibold">Dir Xogta (Submit to AI)</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Qaybta Maamulku ka Akhrisanayo Falanqaynta AI -->
+            <div class="col-md-7">
+                <div class="card p-4 h-100">
+                    <h5 class="fw-bold mb-3 text-dark"><i class="fa-solid fa-chart-line text-primary me-2"></i> Warbixinta & Talooyinka AI ee Maamulku Akhrisanayo</h5>
+                    
+                    <div class="mb-3">
+                        <h6 class="fw-bold text-success small text-uppercase">Xogta Macallimiinta:</h6>
+                        <ul class="border p-3 rounded bg-light small mb-3" id="teacherInsightsList">
+                            <li>Waxaa la soo dejinayaa xogta...</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="fw-bold text-info small text-uppercase">Xogta Waalidiinta & Ardayda:</h6>
+                        <ul class="border p-3 rounded bg-light small mb-3" id="studentInsightsList">
+                            <li>Waxaa la soo dejinayaa xogta...</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h6 class="fw-bold text-warning small text-uppercase">Talooyinka Guud ee Maamulka:</h6>
+                        <ul class="border p-3 rounded bg-light small mb-0" id="adminRecommendationsList">
+                            <li>Waxaa la diyaarinayaa talooyinka...</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = '/login.html';
+
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user.username) document.getElementById('userName').textContent = user.username;
+
+        // Soo jiidista warbixinta AI
+        async function fetchAIInsights() {
+            try {
+                const res = await fetch('/api/ai/insights', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    const teacherEl = document.getElementById('teacherInsightsList');
+                    const studentEl = document.getElementById('studentInsightsList');
+                    const adminEl = document.getElementById('adminRecommendationsList');
+
+                    teacherEl.innerHTML = '';
+                    data.teacherInsights.forEach(t => { teacherEl.innerHTML += `<li>${t}</li>`; });
+
+                    studentEl.innerHTML = '';
+                    data.studentInsights.forEach(s => { studentEl.innerHTML += `<li>${s}</li>`; });
+
+                    adminEl.innerHTML = '';
+                    data.adminRecommendations.forEach(a => { adminEl.innerHTML += `<li>${a}</li>`; });
+                }
+            } catch (err) {
+                console.error('Error fetching AI insights:', err);
+            }
+        }
+
+        // Dirida xogta cusub
+        document.getElementById('aiFeedbackForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const senderType = document.getElementById('senderType').value;
+            const senderName = document.getElementById('senderName').value;
+            const category = document.getElementById('category').value;
+            const message = document.getElementById('message').value;
+
+            try {
+                const res = await fetch('/api/ai/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ senderType, senderName, category, message })
+                });
+
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    alert(data.message);
+                    document.getElementById('aiFeedbackForm').reset();
+                    fetchAIInsights();
+                } else {
+                    alert(data.message || 'Cillad ayaa dhacday');
+                }
+            } catch (err) {
+                console.error('Error submitting feedback:', err);
+            }
+        });
+
+        fetchAIInsights();
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = '/login.html';
+        });
+    </script>
+</body>
+</html>

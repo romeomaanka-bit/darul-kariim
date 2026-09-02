@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maamulka Imtixaanaadka — Darul-Kariim</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root { --sidebar-bg: #1e293b; --emerald: #10b981; }
+        body { background-color: #f1f5f9; font-family: system-ui, -apple-system, sans-serif; }
+        .sidebar { width: 260px; background-color: var(--sidebar-bg); min-height: 100vh; position: fixed; top: 0; left: 0; z-index: 100; color: #cbd5e1; }
+        .sidebar-brand { padding: 20px; font-size: 1.25rem; font-weight: bold; color: #fff; border-bottom: 1px solid #334155; }
+        .sidebar-nav { padding: 15px 10px; list-style: none; margin: 0; }
+        .sidebar-nav li a { display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: #94a3b8; text-decoration: none; border-radius: 8px; font-size: 0.95rem; margin-bottom: 4px; }
+        .sidebar-nav li a:hover, .sidebar-nav li a.active { background-color: #334155; color: #fff; }
+        .main-content { margin-left: 260px; padding: 20px; }
+        .top-navbar { background: #ffffff; padding: 12px 25px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+        .card { border: none; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand d-flex align-items-center gap-2">
+            <i class="fa-solid fa-graduation-cap text-success"></i>
+            <span>DARUL-KARIIM</span>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="/index.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+            <li><a href="/students.html"><i class="fa-solid fa-users"></i> Students</a></li>
+            <li><a href="/classes.html"><i class="fa-solid fa-chalkboard"></i> Classes</a></li>
+            <li><a href="/subjects.html"><i class="fa-solid fa-book"></i> Subjects</a></li>
+            <li><a href="/teachers.html"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a></li>
+            <li><a href="/exams.html" class="active"><i class="fa-solid fa-file-pen"></i> Exams</a></li>
+            <li><a href="/fees.html"><i class="fa-solid fa-money-bill-wave"></i> Fees</a></li>
+            <li><a href="/attendance.html"><i class="fa-solid fa-clipboard-user"></i> Attendance</a></li>
+            <li><a href="/settings.html"><i class="fa-solid fa-gear"></i> Settings</a></li>
+            <li><a href="#" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="top-navbar">
+            <h5 class="fw-bold m-0 text-dark">Maamulka Imtixaanaadka (Exams)</h5>
+            <span class="fw-semibold" id="userName">Administrator</span>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-12">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold m-0 text-dark">Liiska Imtixaanaadka</h6>
+                        <div>
+                            <button class="btn btn-success btn-sm fw-semibold me-2" data-bs-toggle="modal" data-bs-target="#examModal" onclick="openAddModal()">
+                                <i class="fa-solid fa-plus me-1"></i> Ku Dar Imtixaan
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm fw-semibold" onclick="deleteAllExams()">
+                                <i class="fa-solid fa-trash-can me-1"></i> Tirtir Dhammaan
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Magaca Imtixaanka</th>
+                                    <th>Fasalka</th>
+                                    <th>Maaddada</th>
+                                    <th>Waqtiga (Subax / Galab)</th>
+                                    <th>Taariikhda</th>
+                                    <th class="text-end">Tallaabooyinka</th>
+                                </tr>
+                            </thead>
+                            <tbody id="examTableBody">
+                                <!-- Xogta ayaa halkan ka soo bixi doonta -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal-ka Diiwaangelinta iyo Beddelka -->
+    <div class="modal fade" id="examModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="formTitle">Ku Dar Imtixaan Cusub</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="examForm">
+                        <input type="hidden" id="examId">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Magaca Imtixaanka:</label>
+                            <input type="text" class="form-control" id="examName" required placeholder="Tusaale: Mid-Term Exam">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Fasalka:</label>
+                            <select class="form-select" id="examClass" required>
+                                <option value="">-- Dooro Fasalka --</option>
+                                <optgroup label="Primary (Gerd)">
+                                    <option value="Gerd 1">Gerd 1</option>
+                                    <option value="Gerd 2">Gerd 2</option>
+                                    <option value="Gerd 3">Gerd 3</option>
+                                    <option value="Gerd 4">Gerd 4</option>
+                                    <option value="Gerd 5">Gerd 5</option>
+                                    <option value="Gerd 6">Gerd 6</option>
+                                    <option value="Gerd 7">Gerd 7</option>
+                                    <option value="Gerd 8">Gerd 8</option>
+                                </optgroup>
+                                <optgroup label="Secondary (Form)">
+                                    <option value="Form 1">Form 1</option>
+                                    <option value="Form 2">Form 2</option>
+                                    <option value="Form 3">Form 3</option>
+                                    <option value="Form 4">Form 4</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Maaddada:</label>
+                            <select class="form-select" id="examSubject" required>
+                                <option value="">-- Dooro Maaddada --</option>
+                                <option value="Tarbiya">Tarbiya</option>
+                                <option value="Xisaab (Math)">Xisaab (Math)</option>
+                                <option value="Soomaali">Soomaali</option>
+                                <option value="Carabi">Carabi</option>
+                                <option value="English">English</option>
+                                <option value="Science">Science</option>
+                                <option value="Juqraafi">Juqraafi</option>
+                                <option value="Taariikh">Taariikh</option>
+                            </select>
+                        </div>
+                        <!-- Waqtiga oo la koobsaday Subax iyo Galab -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Waqtiga Imtixaanka (Shift):</label>
+                            <select class="form-select" id="examDays" required>
+                                <option value="">-- Dooro Waqtiga --</option>
+                                <option value="Subax">Subax (Morning)</option>
+                                <option value="Galab">Galab (Afternoon)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Taariikhda Imtixaanka:</label>
+                            <input type="date" class="form-control" id="examDate" required>
+                        </div>
+                        <div class="modal-footer px-0 pb-0">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ka Noqo</button>
+                            <button type="submit" class="btn btn-success fw-semibold" id="submitBtn">Keydi Imtixaanka</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = '/login.html';
+
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user.username) document.getElementById('userName').textContent = user.username;
+
+        let examsDataGlobal = [];
+        const examModal = new bootstrap.Modal(document.getElementById('examModal'));
+
+        async function fetchExams() {
+            try {
+                const res = await fetch('/api/exams', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const result = await res.json();
+                examsDataGlobal = result.data || [];
+                
+                const tbody = document.getElementById('examTableBody');
+                tbody.innerHTML = '';
+
+                if (examsDataGlobal.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-4">Wali imtixaan lama diiwaangelin.</td></tr>`;
+                    return;
+                }
+
+                examsDataGlobal.forEach(ex => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td class="fw-semibold">${ex.examName}</td>
+                            <td><span class="badge bg-secondary">${ex.examClass}</span></td>
+                            <td><span class="badge bg-success">${ex.examSubject || 'Lama cayimin'}</span></td>
+                            <td><span class="badge bg-info text-dark">${ex.examDays || 'Lama cayimin'}</span></td>
+                            <td><small class="text-muted">${ex.examDate ? ex.examDate.split('T')[0] : ''}</small></td>
+                            <td class="text-end">
+                                <button class="btn btn-sm btn-outline-primary me-1" onclick="openEditModal('${ex._id}')">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteExam('${ex._id}')">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error('Error fetching exams:', err);
+            }
+        }
+
+        function openAddModal() {
+            document.getElementById('examForm').reset();
+            document.getElementById('examId').value = '';
+            document.getElementById('formTitle').textContent = 'Ku Dar Imtixaan Cusub';
+            document.getElementById('submitBtn').textContent = 'Keydi Imtixaanka';
+        }
+
+        function openEditModal(id) {
+            const ex = examsDataGlobal.find(e => e._id === id);
+            if (!ex) return;
+
+            document.getElementById('examId').value = ex._id;
+            document.getElementById('examName').value = ex.examName;
+            document.getElementById('examClass').value = ex.examClass;
+            document.getElementById('examSubject').value = ex.examSubject || '';
+            document.getElementById('examDays').value = ex.examDays || '';
+            document.getElementById('examDate').value = ex.examDate ? ex.examDate.split('T')[0] : '';
+
+            document.getElementById('formTitle').textContent = 'Wax Ka Beddel Imtixaanka';
+            document.getElementById('submitBtn').textContent = 'Cusbooneysii Imtixaanka';
+            
+            examModal.show();
+        }
+
+        async function deleteExam(id) {
+            if (!confirm('Ma hubtaa inaad tirtirto imtixaankan?')) return;
+            try {
+                const response = await fetch(`/api/exams/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    fetchExams();
+                } else {
+                    alert('Cillad ayaa dhacday lama tirtiri karo.');
+                }
+            } catch (err) {
+                console.error('Error deleting exam:', err);
+            }
+        }
+
+        async function deleteAllExams() {
+            if (!confirm('DIGTOON! Ma hubtaa inaad tirtirto DHAMMAAN imtixaanaadka?')) return;
+            try {
+                const res = await fetch('/api/exams/all/delete', {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    fetchExams();
+                } else {
+                    alert('Cillad ayaa dhacday lama tirtiri karo.');
+                }
+            } catch (err) {
+                console.error('Error deleting all exams:', err);
+            }
+        }
+
+        document.getElementById('examForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const examId = document.getElementById('examId').value;
+            const examName = document.getElementById('examName').value;
+            const examClass = document.getElementById('examClass').value;
+            const examSubject = document.getElementById('examSubject').value;
+            const examDays = document.getElementById('examDays').value;
+            const examDate = document.getElementById('examDate').value;
+
+            try {
+                let url = '/api/exams';
+                const method = examId ? 'PUT' : 'POST';
+                if (examId) url = `/api/exams/${examId}`;
+
+                const res = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ examName, examClass, examSubject, examDays, examDate })
+                });
+                
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    examModal.hide();
+                    fetchExams();
+                } else {
+                    alert(data.message || 'Cillad ayaa dhacday');
+                }
+            } catch (err) {
+                console.error('Error saving exam:', err);
+            }
+        });
+
+        fetchExams();
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = '/login.html';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maamulka Maaddooyinka — Darul-Kariim</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root { --sidebar-bg: #1e293b; --emerald: #10b981; }
+        body { background-color: #f1f5f9; font-family: system-ui, -apple-system, sans-serif; }
+        .sidebar { width: 260px; background-color: var(--sidebar-bg); min-height: 100vh; position: fixed; top: 0; left: 0; z-index: 100; color: #cbd5e1; }
+        .sidebar-brand { padding: 20px; font-size: 1.25rem; font-weight: bold; color: #fff; border-bottom: 1px solid #334155; }
+        .sidebar-nav { padding: 15px 10px; list-style: none; margin: 0; }
+        .sidebar-nav li a { display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: #94a3b8; text-decoration: none; border-radius: 8px; font-size: 0.95rem; margin-bottom: 4px; }
+        .sidebar-nav li a:hover, .sidebar-nav li a.active { background-color: #334155; color: #fff; }
+        .main-content { margin-left: 260px; padding: 20px; }
+        .top-navbar { background: #ffffff; padding: 12px 25px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+        .card { border: none; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand d-flex align-items-center gap-2">
+            <i class="fa-solid fa-graduation-cap text-success"></i>
+            <span>DARUL-KARIIM</span>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="/index.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+            <li><a href="/students.html"><i class="fa-solid fa-users"></i> Students</a></li>
+            <li><a href="/classes.html"><i class="fa-solid fa-chalkboard"></i> Classes</a></li>
+            <li><a href="/subjects.html" class="active"><i class="fa-solid fa-book"></i> Subjects</a></li>
+            <li><a href="/teachers.html"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a></li>
+            <li><a href="/fees.html"><i class="fa-solid fa-money-bill-wave"></i> Fees</a></li>
+            <li><a href="/attendance.html"><i class="fa-solid fa-clipboard-user"></i> Attendance</a></li>
+            <li><a href="/settings.html"><i class="fa-solid fa-gear"></i> Settings</a></li>
+            <li><a href="#" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="top-navbar">
+            <h5 class="fw-bold m-0 text-dark">Maamulka Maaddooyinka (Subjects)</h5>
+            <span class="fw-semibold" id="userName">Administrator</span>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-12">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold m-0 text-dark">Liiska Maaddooyinka Jira</h6>
+                        <div>
+                            <button class="btn btn-success btn-sm fw-semibold me-2" data-bs-toggle="modal" data-bs-target="#subjectModal" onclick="openAddModal()">
+                                <i class="fa-solid fa-plus me-1"></i> Ku Dar Maaddo
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm fw-semibold" onclick="deleteAllSubjects()">
+                                <i class="fa-solid fa-trash-can me-1"></i> Tirtir Dhammaan
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Magaca Maadada</th>
+                                    <th>Faahfaahin</th>
+                                    <th class="text-end">Tallaabooyinka</th>
+                                </tr>
+                            </thead>
+                            <tbody id="subjectTableBody">
+                                <!-- Xogta ayaa halkan ka soo bixi doonta -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal-ka Diiwaangelinta iyo Beddelka -->
+    <div class="modal fade" id="subjectModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="formTitle">Ku Dar Maaddo Cusub</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="subjectForm">
+                        <input type="hidden" id="subjectId">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Magaca Maadada:</label>
+                            <input type="text" class="form-control" id="subjectName" required placeholder="Tusaale: Mathematics">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Faahfaahin (Ikhtiyaari):</label>
+                            <textarea class="form-control" id="description" rows="2" placeholder="Ku qor faahfaahin kooban..."></textarea>
+                        </div>
+                        <div class="modal-footer px-0 pb-0">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ka Noqo</button>
+                            <button type="submit" class="btn btn-success fw-semibold" id="submitBtn">Keydi Maadada</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = '/login.html';
+
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user.username) document.getElementById('userName').textContent = user.username;
+
+        let subjectsDataGlobal = [];
+        const subjectModal = new bootstrap.Modal(document.getElementById('subjectModal'));
+
+        async function fetchSubjects() {
+            try {
+                const res = await fetch('/api/subjects', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const result = await res.json();
+                subjectsDataGlobal = result.data || [];
+                
+                const tbody = document.getElementById('subjectTableBody');
+                tbody.innerHTML = '';
+
+                if (subjectsDataGlobal.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted py-4">Wali maaddo lama diiwaangelin.</td></tr>`;
+                    return;
+                }
+
+                subjectsDataGlobal.forEach(sub => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td class="fw-semibold">${sub.subjectName}</td>
+                            <td><small class="text-muted">${sub.description || 'Ma lahan faahfaahin'}</small></td>
+                            <td class="text-end">
+                                <button class="btn btn-sm btn-outline-primary me-1" onclick="openEditModal('${sub._id}')">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteSubject('${sub._id}')">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error('Error fetching subjects:', err);
+            }
+        }
+
+        function openAddModal() {
+            document.getElementById('subjectForm').reset();
+            document.getElementById('subjectId').value = '';
+            document.getElementById('formTitle').textContent = 'Ku Dar Maaddo Cusub';
+            document.getElementById('submitBtn').textContent = 'Keydi Maadada';
+        }
+
+        function openEditModal(id) {
+            const sub = subjectsDataGlobal.find(s => s._id === id);
+            if (!sub) return;
+
+            document.getElementById('subjectId').value = sub._id;
+            document.getElementById('subjectName').value = sub.subjectName;
+            document.getElementById('description').value = sub.description || '';
+
+            document.getElementById('formTitle').textContent = 'Wax Ka Beddel Maadada';
+            document.getElementById('submitBtn').textContent = 'Cusbooneysii Maadada';
+            
+            subjectModal.show();
+        }
+
+        async function deleteSubject(id) {
+            if (!confirm('Ma hubtaa inaad tirtirto maadadan?')) return;
+            try {
+                const res = await fetch(`/api/subjects/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    fetchSubjects();
+                } else {
+                    alert('Cillad ayaa dhacday lama tirtiri karo.');
+                }
+            } catch (err) {
+                console.error('Error deleting subject:', err);
+            }
+        }
+
+        async function deleteAllSubjects() {
+            if (!confirm('DIGTOON! Ma hubtaa inaad tirtirto DHAMMAAN maaddooyinka?')) return;
+            try {
+                const res = await fetch('/api/subjects/all/delete', {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    fetchSubjects();
+                } else {
+                    alert('Cillad ayaa dhacday lama tirtiri karo.');
+                }
+            } catch (err) {
+                console.error('Error deleting all subjects:', err);
+            }
+        }
+
+        document.getElementById('subjectForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const subjectId = document.getElementById('subjectId').value;
+            const subjectName = document.getElementById('subjectName').value;
+            const description = document.getElementById('description').value;
+            
+            // Koodhka waxaa loo sameynayaa si otomaatig ah si uusan isticmaaluhu u buuxin
+            const subjectCode = 'SUB-' + Math.floor(1000 + Math.random() * 9000);
+
+            try {
+                let url = '/api/subjects';
+                const method = subjectId ? 'PUT' : 'POST';
+                if (subjectId) url = `/api/subjects/${subjectId}`;
+
+                const res = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ subjectName, subjectCode, description })
+                });
+                
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    subjectModal.hide();
+                    fetchSubjects();
+                } else {
+                    alert(data.message || 'Cillad ayaa dhacday');
+                }
+            } catch (err) {
+                console.error('Error saving subject:', err);
+            }
+        });
+
+        fetchSubjects();
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = '/login.html';
+        });
+    </script>
+</body>
+</html>

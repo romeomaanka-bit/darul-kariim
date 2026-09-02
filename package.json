@@ -3,13 +3,17 @@
   "version": "1.0.0",
   "description": "Darul-Kariim School Management System - Full Stack Application",
   "main": "backend/server.js",
- "scripts": {
+  "scripts": {
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js",
     "seed": "node backend/utils/seed.js",
     "build": "echo 'Build completed successfully'"
   },
   "dependencies": {
+    "@capacitor/android": "^6.2.1",
+    "@capacitor/cli": "^6.2.1",
+    "@capacitor/core": "^6.2.1",
+    "@capacitor/ios": "^6.2.1",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
@@ -24,6 +28,7 @@
     "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
     "nodemon": "^3.1.0"
   }
 }

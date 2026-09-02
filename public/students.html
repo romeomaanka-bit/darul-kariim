@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students — Darul-Kariim School Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body { background-color: #f4f6f9; overflow-x: hidden; font-family: system-ui, -apple-system, sans-serif; }
+        .main-content { padding: 20px; }
+        .card { border: none; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        @media (max-width: 768px) {
+            .main-content { padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Qeybta Macluumaadka Weyn -->
+            <div class="col-12 main-content">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                    <div>
+                        <h4 class="fw-bold text-dark mb-0">Maamulka Ardayda (Students Management)</h4>
+                        <p class="text-muted small mb-0">Darul-Kariim School Management System</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-success btn-sm" onclick="openAddModal()">
+                            <i class="fa-solid fa-plus me-1"></i> Arday Cusub
+                        </button>
+                        <a href="index.html" class="btn btn-secondary btn-sm">
+                            <i class="fa-solid fa-arrow-left me-1"></i> Dashboard
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card iyo Miiska Ardayda -->
+                <div class="card p-3">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Magaca Buuxa</th>
+                                    <th>Jinsiga</th>
+                                    <th>Fasal (Class)</th>
+                                    <th>Telefoonka</th>
+                                    <th>Xaaladda</th>
+                                    <th>Tallaabooyin</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentTableBody">
+                                <!-- Xogta waxaa keenaya JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal-ka Arday Ku Darida / Wax Ka Beddelka -->
+    <div class="modal fade" id="addStudentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Diiwaangelinta Arday Cusub</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="studentForm">
+                        <input type="hidden" id="studentDbId">
+                        <div class="mb-2">
+                            <label class="small fw-semibold">Magaca Koowaad</label>
+                            <input type="text" id="firstName" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="small fw-semibold">Magaca Dambe / Aabbaha</label>
+                            <input type="text" id="lastName" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="small fw-semibold">Jinsiga</label>
+                            <select id="gender" class="form-select form-select-sm">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label class="small fw-semibold">Taariikhda Dhalashada</label>
+                            <input type="date" id="dateOfBirth" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="small fw-semibold">Fasal (Class)</label>
+                            <input type="text" id="className" class="form-control form-control-sm" placeholder="Tusaale: Grade 5" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="small fw-semibold">Qaybta (Section) - Optional</label>
+                            <input type="text" id="section" class="form-control form-control-sm" placeholder="Tusaale: A, B">
+                        </div>
+                        <div class="mb-2">
+                            <label class="small fw-semibold">Xaaladda (Status)</label>
+                            <select id="status" class="form-select form-select-sm">
+                                <option value="Active">Active</option>
+                                <option value="Suspended">Suspended</option>
+                                <option value="Graduated">Graduated</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label class="small fw-semibold">Telefoonka</label>
+                            <input type="text" id="phone" class="form-control form-control-sm">
+                        </div>
+                        <div class="mb-3">
+                            <label class="small fw-semibold">Degmada/Cinwaanka</label>
+                            <input type="text" id="address" class="form-control form-control-sm" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 btn-sm" id="saveBtn">Keydi Ardayga</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Hubinta in user-ku soo galay (Authentication check)
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+
+        let studentsList = [];
+
+        async function fetchStudents() {
+            try {
+                const res = await fetch('/api/students', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const result = await res.json();
+                if (result.success) {
+                    studentsList = result.data;
+                    const tbody = document.getElementById('studentTableBody');
+                    if (studentsList.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-4">Wali arday lama diiwaangelin.</td></tr>`;
+                        return;
+                    }
+                    tbody.innerHTML = studentsList.map(s => `
+                        <tr>
+                            <td>${s.studentId}</td>
+                            <td>${s.firstName} ${s.lastName}</td>
+                            <td>${s.gender}</td>
+                            <td>${s.className} ${s.section ? '(' + s.section + ')' : ''}</td>
+                            <td>${s.phone || 'N/A'}</td>
+                            <td><span class="badge bg-${s.status === 'Active' ? 'success' : (s.status === 'Suspended' ? 'danger' : 'secondary')}">${s.status}</span></td>
+                            <td>
+                                <button class="btn btn-outline-primary btn-sm me-1" onclick="openEditModal('${s._id}')">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm" onclick="deleteStudent('${s._id}')">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error('Khalad ayaa dhacay:', err);
+            }
+        }
+
+        function openAddModal() {
+            document.getElementById('studentForm').reset();
+            document.getElementById('studentDbId').value = '';
+            document.getElementById('status').value = 'Active';
+            document.getElementById('modalTitle').innerText = 'Diiwaangelinta Arday Cusub';
+            document.getElementById('saveBtn').innerText = 'Keydi Ardayga';
+            new bootstrap.Modal(document.getElementById('addStudentModal')).show();
+        }
+
+        function openEditModal(id) {
+            const student = studentsList.find(s => s._id === id);
+            if (!student) return;
+
+            document.getElementById('studentDbId').value = student._id;
+            document.getElementById('firstName').value = student.firstName || '';
+            document.getElementById('lastName').value = student.lastName || '';
+            document.getElementById('gender').value = student.gender || 'Male';
+            document.getElementById('dateOfBirth').value = student.dateOfBirth ? student.dateOfBirth.split('T')[0] : '';
+            document.getElementById('className').value = student.className || '';
+            document.getElementById('section').value = student.section || '';
+            document.getElementById('status').value = student.status || 'Active';
+            document.getElementById('phone').value = student.phone || '';
+            document.getElementById('address').value = student.address || '';
+
+            document.getElementById('modalTitle').innerText = 'Wax Ka Beddelka Ardayga';
+            document.getElementById('saveBtn').innerText = 'Cusboonaysii Ardayga';
+            new bootstrap.Modal(document.getElementById('addStudentModal')).show();
+        }
+
+        document.getElementById('studentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const studentDbId = document.getElementById('studentDbId').value;
+            const studentData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                gender: document.getElementById('gender').value,
+                dateOfBirth: document.getElementById('dateOfBirth').value,
+                className: document.getElementById('className').value,
+                section: document.getElementById('section').value,
+                status: document.getElementById('status').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value
+            };
+
+            const url = studentDbId ? `/api/students/${studentDbId}` : '/api/students';
+            const method = studentDbId ? 'PUT' : 'POST';
+
+            try {
+                const res = await fetch(url, {
+                    method: method,
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(studentData)
+                });
+                const result = await res.json();
+                if (result.success) {
+                    bootstrap.Modal.getInstance(document.getElementById('addStudentModal')).hide();
+                    fetchStudents();
+                } else {
+                    alert(result.message);
+                }
+            } catch (err) {
+                console.error('Khalad ayaa dhacay:', err);
+            }
+        });
+
+        async function deleteStudent(id) {
+            if (confirm('Ma hubtaa inaad tirtirto ardaygan?')) {
+                try {
+                    const res = await fetch(`/api/students/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const result = await res.json();
+                    if (result.success) {
+                        fetchStudents();
+                    }
+                } catch (err) {
+                    console.error('Khalad tirtirid ah:', err);
+                }
+            }
+        }
+
+        fetchStudents();
+    </script>
+</body>
+</html>

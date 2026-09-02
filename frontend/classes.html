@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maamulka Fasallada — Darul-Kariim School Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root { --sidebar-bg: #1e293b; --emerald: #10b981; }
+        body { background-color: #f1f5f9; font-family: system-ui, -apple-system, sans-serif; }
+        .sidebar { width: 260px; background-color: var(--sidebar-bg); min-height: 100vh; position: fixed; top: 0; left: 0; z-index: 100; color: #cbd5e1; }
+        .sidebar-brand { padding: 20px; font-size: 1.25rem; font-weight: bold; color: #fff; border-bottom: 1px solid #334155; }
+        .sidebar-nav { padding: 15px 10px; list-style: none; margin: 0; }
+        .sidebar-nav li a { display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: #94a3b8; text-decoration: none; border-radius: 8px; font-size: 0.95rem; margin-bottom: 4px; }
+        .sidebar-nav li a:hover, .sidebar-nav li a.active { background-color: #334155; color: #fff; }
+        .main-content { margin-left: 260px; padding: 20px; }
+        .top-navbar { background: #ffffff; padding: 12px 25px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+        .card { border: none; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand d-flex align-items-center gap-2">
+            <i class="fa-solid fa-graduation-cap text-success"></i>
+            <span>DARUL-KARIIM</span>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="/index.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+            <li><a href="/students.html"><i class="fa-solid fa-users"></i> Students</a></li>
+            <li><a href="/classes.html" class="active"><i class="fa-solid fa-chalkboard"></i> Classes</a></li>
+            <li><a href="/teachers.html"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a></li>
+            <li><a href="/fees.html"><i class="fa-solid fa-money-bill-wave"></i> Fees</a></li>
+            <li><a href="/attendance.html"><i class="fa-solid fa-clipboard-user"></i> Attendance</a></li>
+            <li><a href="/settings.html"><i class="fa-solid fa-gear"></i> Settings</a></li>
+            <li><a href="#" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="top-navbar">
+            <h5 class="fw-bold m-0 text-dark">Maamulka Fasallada (Classes)</h5>
+            <span class="fw-semibold" id="userName">Administrator</span>
+        </div>
+
+        <div class="row g-4">
+            <!-- Foomka Diiwaangelinta / Wax-ka-beddelka Fasalka -->
+            <div class="col-md-4">
+                <div class="card p-4">
+                    <h6 class="fw-bold mb-3 text-dark" id="formTitle">Ku Dar Fasal Cusub</h6>
+                    <form id="classForm">
+                        <input type="hidden" id="classId">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Magaca Fasalka:</label>
+                            <select class="form-select" id="className" required>
+                                <option value="">-- Dooro Fasalka --</option>
+                                <optgroup label="Primary (Gerd)">
+                                    <option value="Gerd 1">Gerd 1</option>
+                                    <option value="Gerd 2">Gerd 2</option>
+                                    <option value="Gerd 3">Gerd 3</option>
+                                    <option value="Gerd 4">Gerd 4</option>
+                                    <option value="Gerd 5">Gerd 5</option>
+                                    <option value="Gerd 6">Gerd 6</option>
+                                    <option value="Gerd 7">Gerd 7</option>
+                                    <option value="Gerd 8">Gerd 8</option>
+                                </optgroup>
+                                <optgroup label="Secondary (Form)">
+                                    <option value="Form 1">Form 1</option>
+                                    <option value="Form 2">Form 2</option>
+                                    <option value="Form 3">Form 3</option>
+                                    <option value="Form 4">Form 4</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Macallinka Masuulka Ka Ah:</label>
+                            <select class="form-select" id="teacherName" required>
+                                <option value="">-- Dooro Macallin --</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Waqtiga / Jadwalka:</label>
+                            <input type="text" class="form-control" id="schedule" required placeholder="Tusaale: Subax (8:00 AM - 12:00 PM)">
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 fw-semibold" id="submitBtn">Keydi Fasalka</button>
+                        <button type="button" class="btn btn-secondary w-100 fw-semibold mt-2 d-none" id="cancelBtn" onclick="resetForm()">Ka noqo</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Liiska Fasallada -->
+            <div class="col-md-8">
+                <div class="card p-4">
+                    <h6 class="fw-bold mb-3 text-dark">Liiska Fasallada Jira</h6>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Magaca Fasalka</th>
+                                    <th>Macallinka</th>
+                                    <th>Waqtiga</th>
+                                    <th class="text-end">Tallaabooyinka</th>
+                                </tr>
+                            </thead>
+                            <tbody id="classTableBody">
+                                <!-- Xogta ayaa ka soo muuqanaysa halkan -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = '/login.html';
+
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user.username) document.getElementById('userName').textContent = user.username;
+
+        let classesDataGlobal = [];
+
+        // Soo jiidista magacyada macallimiinta si loogu buuxiyo Dropdown-ka
+        async function fetchTeachersDropdown() {
+            try {
+                const res = await fetch('/api/teachers', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const result = await res.json();
+                const teachersList = Array.isArray(result) ? result : (result.data || []);
+                
+                const select = document.getElementById('teacherName');
+                select.innerHTML = '<option value="">-- Dooro Macallin --</option>';
+                
+                teachersList.forEach(teacher => {
+                    const name = teacher.fullName || teacher.name || `${teacher.firstName || ''} ${teacher.lastName || ''}`.trim();
+                    if(name) {
+                        select.innerHTML += `<option value="${name}">${name}</option>`;
+                    }
+                });
+            } catch (err) {
+                console.error('Error fetching teachers dropdown:', err);
+            }
+        }
+
+        async function fetchClasses() {
+            try {
+                const res = await fetch('/api/classes', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const result = await res.json();
+                classesDataGlobal = result.data || [];
+                
+                const tbody = document.getElementById('classTableBody');
+                tbody.innerHTML = '';
+
+                if (classesDataGlobal.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-4">Wali fasal lama diiwaangelin.</td></tr>`;
+                    return;
+                }
+
+                classesDataGlobal.forEach(cls => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td class="fw-semibold">${cls.className}</td>
+                            <td>${cls.teacherName}</td>
+                            <td><small class="text-muted">${cls.schedule}</small></td>
+                            <td class="text-end">
+                                <button class="btn btn-sm btn-outline-primary me-1" onclick="editClass('${cls._id}')">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteClass('${cls._id}')">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error('Error fetching classes:', err);
+            }
+        }
+
+        function editClass(id) {
+            const cls = classesDataGlobal.find(c => c._id === id);
+            if (!cls) return;
+
+            document.getElementById('classId').value = cls._id;
+            document.getElementById('className').value = cls.className;
+            document.getElementById('teacherName').value = cls.teacherName;
+            document.getElementById('schedule').value = cls.schedule;
+
+            document.getElementById('formTitle').textContent = 'Wax Ka Beddel Fasalka';
+            document.getElementById('submitBtn').textContent = 'Cusbooneysii Fasalka';
+            document.getElementById('cancelBtn').classList.remove('d-none');
+        }
+
+        function resetForm() {
+            document.getElementById('classForm').reset();
+            document.getElementById('classId').value = '';
+            document.getElementById('formTitle').textContent = 'Ku Dar Fasal Cusub';
+            document.getElementById('submitBtn').textContent = 'Keydi Fasalka';
+            document.getElementById('cancelBtn').classList.add('d-none');
+        }
+
+        async function deleteClass(id) {
+            if (!confirm('Ma hubtaa inaad tirtirto fasalkan?')) return;
+            try {
+                const res = await fetch(`/api/classes/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    alert('Fasalkii waa la tirtiray!');
+                    fetchClasses();
+                } else {
+                    alert('Cillad ayaa dhacday lama tirtiri karo.');
+                }
+            } catch (err) {
+                console.error('Error deleting class:', err);
+            }
+        }
+
+        document.getElementById('classForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const classId = document.getElementById('classId').value;
+            const className = document.getElementById('className').value;
+            const teacherName = document.getElementById('teacherName').value;
+            const schedule = document.getElementById('schedule').value;
+            
+            const classCode = 'CLS-' + Math.floor(1000 + Math.random() * 9000);
+
+            try {
+                let url = '/api/classes';
+                let method = 'POST';
+
+                if (classId) {
+                    url = `/api/classes/${classId}`;
+                    method = 'PUT'; // Haddii backend-kaagu u baahan yahay PUT, ama POST adigoo UPDATE ah
+                }
+
+                // Si loo hubiyo in backend-kaaga PUT ama PATCH uu shaqeeyo, ama haddii route-kaagu yahay PUT/PATCH:
+                // Haddii server-kaagu uusan lahayn PUT route, waxaad ku dari kartaa router.put('/:id', ...) ama aan isticmaalno POST. Halkan waxaan isticmaaleynaa method-ka saxda ah:
+                const res = await fetch(url, {
+                    method: classId ? 'PUT' : 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ className, classCode, teacherName, schedule })
+                });
+                
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    alert(classId ? 'Fasalkii waa la cusboonaysiiyay!' : 'Fasalka si guul leh ayaa loo diiwaangeliyay!');
+                    resetForm();
+                    fetchClasses();
+                } else {
+                    alert(data.message || 'Cillad ayaa dhacday');
+                }
+            } catch (err) {
+                console.error('Error saving class:', err);
+            }
+        });
+
+        fetchTeachersDropdown();
+        fetchClasses();
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = '/login.html';
+        });
+    </script>
+</body>
+</html>

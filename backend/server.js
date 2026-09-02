@@ -37,8 +37,15 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/students', require('./routes/studentRoutes'));
 app.use('/api/teachers', require('./routes/teacherRoutes'));
 app.use('/api/settings', require('./routes/settingsRoutes'));
-// Wadada cusub ee Lacagaha (Fees Route)
 app.use('/api/fees', require('./routes/feeRoutes'));
+// Wadada cusub ee Xadirinta (Attendance Route)
+app.use('/api/attendance', require('./routes/attendance'));
+app.use('/api/classes', require('./routes/classRoutes'));
+app.use('/api/subjects', require('./routes/subjectRoutes'));
+app.use('/api/exams', require('./routes/examRoutes'));
+app.use('/api/results', require('./routes/resultRoutes'));
+app.use('/api/timetable', require('./routes/timetableRoutes'));
+app.use('/api/ai', require('./routes/aiRoutes'));
 
 // ==================== FRONTEND STATIC SERVING ====================
 app.use(express.static(path.join(__dirname, '../frontend')));
@@ -59,9 +66,13 @@ app.get('/settings.html', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/settings.html'));
 });
 
-// Wadada cusub ee Page-ka Lacagaha (Haddii aad abuurto fees.html)
 app.get('/fees.html', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/fees.html'));
+});
+
+// Wadada cusub ee Page-ka Xadirinta (Attendance Page)
+app.get('/attendance.html', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/attendance.html'));
 });
 
 app.get('/', (req, res) => {

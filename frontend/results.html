@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Natiijada Imtixaanaadka — Darul-Kariim</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root { --sidebar-bg: #1e293b; --emerald: #10b981; }
+        body { background-color: #f1f5f9; font-family: system-ui, -apple-system, sans-serif; }
+        .sidebar { width: 260px; background-color: var(--sidebar-bg); min-height: 100vh; position: fixed; top: 0; left: 0; z-index: 100; color: #cbd5e1; }
+        .sidebar-brand { padding: 20px; font-size: 1.25rem; font-weight: bold; color: #fff; border-bottom: 1px solid #334155; }
+        .sidebar-nav { padding: 15px 10px; list-style: none; margin: 0; }
+        .sidebar-nav li a { display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: #94a3b8; text-decoration: none; border-radius: 8px; font-size: 0.95rem; margin-bottom: 4px; }
+        .sidebar-nav li a:hover, .sidebar-nav li a.active { background-color: #334155; color: #fff; }
+        .main-content { margin-left: 260px; padding: 20px; }
+        .top-navbar { background: #ffffff; padding: 12px 25px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+        .card { border: none; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand d-flex align-items-center gap-2">
+            <i class="fa-solid fa-graduation-cap text-success"></i>
+            <span>DARUL-KARIIM</span>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="/index.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+            <li><a href="/students.html"><i class="fa-solid fa-users"></i> Students</a></li>
+            <li><a href="/classes.html"><i class="fa-solid fa-chalkboard"></i> Classes</a></li>
+            <li><a href="/subjects.html"><i class="fa-solid fa-book"></i> Subjects</a></li>
+            <li><a href="/teachers.html"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a></li>
+            <li><a href="/exams.html"><i class="fa-solid fa-file-pen"></i> Exams</a></li>
+            <li><a href="/results.html" class="active"><i class="fa-solid fa-square-poll-vertical"></i> Results</a></li>
+            <li><a href="/timetable.html"><i class="fa-solid fa-calendar-days"></i> Timetable</a></li>
+            <li><a href="/fees.html"><i class="fa-solid fa-money-bill-wave"></i> Fees</a></li>
+            <li><a href="/attendance.html"><i class="fa-solid fa-clipboard-user"></i> Attendance</a></li>
+            <li><a href="/settings.html"><i class="fa-solid fa-gear"></i> Settings</a></li>
+            <li><a href="#" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="top-navbar">
+            <h5 class="fw-bold m-0 text-dark">Natiijada Imtixaanaadka Ardayda (Results)</h5>
+            <span class="fw-semibold" id="userName">Administrator</span>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-12">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold m-0 text-dark">Dhibcaha Imtixaanka ee Ardayda</h6>
+                        <button class="btn btn-success btn-sm fw-semibold" data-bs-toggle="modal" data-bs-target="#resultModal" onclick="openAddModal()">
+                            <i class="fa-solid fa-plus me-1"></i> Gali Natiijo Cusub
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Magaca Ardayga</th>
+                                    <th>Fasalka</th>
+                                    <th>Maaddada</th>
+                                    <th>Imtixaanka</th>
+                                    <th>Dhibcaha (Score)</th>
+                                    <th>Darajada (Grade)</th>
+                                    <th class="text-end">Tallaabooyinka</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resultTableBody">
+                                <!-- Xogta ayaa halkan ka soo bixi doonta -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal-ka Diiwaangelinta Natiijada -->
+    <div class="modal fade" id="resultModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="formTitle">Gali Dhibcaha Ardayga</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="resultForm">
+                        <input type="hidden" id="resultId">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Magaca Ardayga:</label>
+                            <input type="text" class="form-control" id="studentName" required placeholder="Tusaale: Axmed Cali Maxamed">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Fasalka:</label>
+                            <select class="form-select" id="resultClass" required>
+                                <option value="">-- Dooro Fasalka --</option>
+                                <option value="Gerd 1">Gerd 1</option>
+                                <option value="Gerd 2">Gerd 2</option>
+                                <option value="Gerd 3">Gerd 3</option>
+                                <option value="Gerd 4">Gerd 4</option>
+                                <option value="Gerd 5">Gerd 5</option>
+                                <option value="Gerd 6">Gerd 6</option>
+                                <option value="Gerd 7">Gerd 7</option>
+                                <option value="Gerd 8">Gerd 8</option>
+                                <option value="Form 1">Form 1</option>
+                                <option value="Form 2">Form 2</option>
+                                <option value="Form 3">Form 3</option>
+                                <option value="Form 4">Form 4</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Maaddada:</label>
+                            <select class="form-select" id="resultSubject" required>
+                                <option value="">-- Dooro Maaddada --</option>
+                                <option value="Tarbiya">Tarbiya</option>
+                                <option value="Xisaab (Math)">Xisaab (Math)</option>
+                                <option value="Soomaali">Soomaali</option>
+                                <option value="Carabi">Carabi</option>
+                                <option value="English">English</option>
+                                <option value="Science">Science</option>
+                                <option value="Juqraafi">Juqraafi</option>
+                                <option value="Taariikh">Taariikh</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Nooca Imtixaanka:</label>
+                            <input type="text" class="form-control" id="examType" required placeholder="Tusaale: Mid-Term / Final Exam">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Dhibcaha La Helay (Max: 100):</label>
+                            <input type="number" class="form-control" id="score" max="100" min="0" required placeholder="85">
+                        </div>
+                        <div class="modal-footer px-0 pb-0">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ka Noqo</button>
+                            <button type="submit" class="btn btn-success fw-semibold" id="submitBtn">Keydi Natiijada</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = '/login.html';
+
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user.username) document.getElementById('userName').textContent = user.username;
+
+        let resultsGlobal = [];
+        const resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
+
+        function calculateGrade(score) {
+            if (score >= 85) return { grade: 'A', class: 'bg-success' };
+            if (score >= 75) return { grade: 'B', class: 'bg-primary' };
+            if (score >= 60) return { grade: 'C', class: 'bg-info text-dark' };
+            if (score >= 50) return { grade: 'D', class: 'bg-warning text-dark' };
+            return { grade: 'F', class: 'bg-danger' };
+        }
+
+        async function fetchResults() {
+            try {
+                const res = await fetch('/api/results', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const result = await res.json();
+                resultsGlobal = result.data || [];
+                
+                const tbody = document.getElementById('resultTableBody');
+                tbody.innerHTML = '';
+
+                if (resultsGlobal.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-4">Wali natiijooyin arday lama diiwaangelin.</td></tr>`;
+                    return;
+                }
+
+                resultsGlobal.forEach(item => {
+                    const g = calculateGrade(item.score);
+                    tbody.innerHTML += `
+                        <tr>
+                            <td class="fw-semibold">${item.studentName}</td>
+                            <td><span class="badge bg-secondary">${item.resultClass}</span></td>
+                            <td>${item.resultSubject}</td>
+                            <td>${item.examType}</td>
+                            <td class="fw-bold">${item.score} / 100</td>
+                            <td><span class="badge ${g.class}">${g.grade}</span></td>
+                            <td class="text-end">
+                                <button class="btn btn-sm btn-outline-primary me-1" onclick="openEditModal('${item._id}')">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteResult('${item._id}')">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error('Error fetching results:', err);
+            }
+        }
+
+        function openAddModal() {
+            document.getElementById('resultForm').reset();
+            document.getElementById('resultId').value = '';
+            document.getElementById('formTitle').textContent = 'Gali Dhibcaha Ardayga';
+            document.getElementById('submitBtn').textContent = 'Keydi Natiijada';
+        }
+
+        function openEditModal(id) {
+            const item = resultsGlobal.find(r => r._id === id);
+            if (!item) return;
+
+            document.getElementById('resultId').value = item._id;
+            document.getElementById('studentName').value = item.studentName;
+            document.getElementById('resultClass').value = item.resultClass;
+            document.getElementById('resultSubject').value = item.resultSubject;
+            document.getElementById('examType').value = item.examType;
+            document.getElementById('score').value = item.score;
+
+            document.getElementById('formTitle').textContent = 'Wax Ka Beddel Natiijada';
+            document.getElementById('submitBtn').textContent = 'Cusbooneysii';
+            resultModal.show();
+        }
+
+        async function deleteResult(id) {
+            if (!confirm('Ma hubtaa inaad tirtirto natiijadan?')) return;
+            try {
+                const res = await fetch(`/api/results/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) fetchResults();
+                else alert('Cillad ayaa dhacday');
+            } catch (err) {
+                console.error('Error deleting result:', err);
+            }
+        }
+
+        document.getElementById('resultForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('resultId').value;
+            const studentName = document.getElementById('studentName').value;
+            const resultClass = document.getElementById('resultClass').value;
+            const resultSubject = document.getElementById('resultSubject').value;
+            const examType = document.getElementById('examType').value;
+            const score = Number(document.getElementById('score').value);
+
+            try {
+                let url = '/api/results';
+                let method = id ? 'PUT' : 'POST';
+                if (id) url = `/api/results/${id}`;
+
+                const res = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ studentName, resultClass, resultSubject, examType, score })
+                });
+
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    resultModal.hide();
+                    fetchResults();
+                } else {
+                    alert(data.message || 'Cillad ayaa dhacday');
+                }
+            } catch (err) {
+                console.error('Error saving result:', err);
+            }
+        });
+
+        fetchResults();
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = '/login.html';
+        });
+    </script>
+</body>
+</html>

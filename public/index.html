@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maamulka Lacagta — Darul-Kariim School Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root { --sidebar-bg: #1e293b; --emerald: #10b981; }
+        body { background-color: #f1f5f9; font-family: system-ui, -apple-system, sans-serif; }
+        .sidebar { width: 260px; background-color: var(--sidebar-bg); min-height: 100vh; position: fixed; top: 0; left: 0; z-index: 100; color: #cbd5e1; }
+        .sidebar-brand { padding: 20px; font-size: 1.25rem; font-weight: bold; color: #fff; border-bottom: 1px solid #334155; }
+        .sidebar-nav { padding: 15px 10px; list-style: none; margin: 0; }
+        .sidebar-nav li a { display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: #94a3b8; text-decoration: none; border-radius: 8px; font-size: 0.95rem; margin-bottom: 4px; }
+        .sidebar-nav li a:hover, .sidebar-nav li a.active { background-color: #334155; color: #fff; }
+        .main-content { margin-left: 260px; padding: 20px; }
+        .top-navbar { background: #ffffff; padding: 12px 25px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+        .card { border: none; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .filter-btn.active { background-color: #1e293b; color: white; }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar-ka Naqshaddii Ardayda -->
+    <div class="sidebar">
+        <div class="sidebar-brand d-flex align-items-center gap-2">
+            <i class="fa-solid fa-graduation-cap text-success"></i>
+            <span>DARUL-KARIIM</span>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="/index.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+            <li><a href="/students.html"><i class="fa-solid fa-users"></i> Students</a></li>
+            <li><a href="/teachers.html"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a></li>
+            <li><a href="/fees.html" class="active"><i class="fa-solid fa-money-bill-wave"></i> Fees</a></li>
+            <li><a href="/settings.html"><i class="fa-solid fa-gear"></i> Settings</a></li>
+            <li><a href="#" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="top-navbar">
+            <h5 class="fw-bold m-0 text-dark">Maamulka Lacagta Ardayda</h5>
+            <div class="d-flex align-items-center gap-3">
+                <span id="currentDate" class="text-muted small"></span>
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center gap-2 text-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
+                        <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;" id="userInitial">A</div>
+                        <div>
+                            <div class="fw-semibold small" id="userName">Administrator</div>
+                            <div class="text-muted" style="font-size: 0.75rem;" id="userRole">Super Admin</div>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                        <li><a class="dropdown-item py-2 text-danger" href="#" id="logoutBtnDropdown"><i class="fa-solid fa-right-from-bracket me-2"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kaararka Xogta Kooban -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="card p-3 border-start border-4 border-success">
+                    <div class="text-muted small fw-semibold">Wadarta Bixisay (Paid)</div>
+                    <h4 class="fw-bold mt-1 text-success" id="totalPaidDisplay">$0</h4>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3 border-start border-4 border-warning">
+                    <div class="text-muted small fw-semibold">Wadarta Sugaya (Pending)</div>
+                    <h4 class="fw-bold mt-1 text-warning" id="totalPendingDisplay">$0</h4>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3 border-start border-4 border-danger">
+                    <div class="text-muted small fw-semibold">Wadarta Aan Bixin (Unpaid)</div>
+                    <h4 class="fw-bold mt-1 text-danger" id="totalUnpaidDisplay">$0</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form iyo Liis -->
+        <div class="row g-4">
+            <!-- Form-ka Diiwaangelinta -->
+            <div class="col-md-4">
+                <div class="card p-4">
+                    <h6 class="fw-bold mb-3 text-dark">Diiwaangelinta Lacagta</h6>
+                    <form id="feeForm">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Dooro Ardayga:</label>
+                            <select class="form-select" id="studentName" required>
+                                <option value="">-- Dooro Arday --</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Lacagta ($):</label>
+                            <input type="number" class="form-control" id="feeAmount" required placeholder="0">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Bisha:</label>
+                            <input type="text" class="form-control" id="feeMonth" required placeholder="Tusaale: August">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Xaaladda Bixinta:</label>
+                            <select class="form-select" id="feeStatus" required>
+                                <option value="Bixiyay">Bixiyay (Paid)</option>
+                                <option value="Sugaya">Sugaya / Dhiman (Pending)</option>
+                                <option value="Aan Bixin">Aan Bixin (Unpaid)</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 fw-semibold">Keydi Lacagta</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Liiska iyo Badhannada Kala-soocidda -->
+            <div class="col-md-8">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold m-0 text-dark">Liiska Lacagaha</h6>
+                        <!-- Badhannada Filter-ka -->
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-secondary filter-btn active" onclick="filterFees('All')">Dhammaan</button>
+                            <button class="btn btn-outline-success filter-btn" onclick="filterFees('Bixiyay')">Bixiyay</button>
+                            <button class="btn btn-outline-warning filter-btn" onclick="filterFees('Sugaya')">Sugaya</button>
+                            <button class="btn btn-outline-danger filter-btn" onclick="filterFees('Aan Bixin')">Aan Bixin</button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Magaca Ardayga</th>
+                                    <th>Lacagta</th>
+                                    <th>Bisha</th>
+                                    <th>Xaaladda</th>
+                                    <th>Taariikhda</th>
+                                </tr>
+                            </thead>
+                            <tbody id="feesTableBody">
+                                <!-- Xogta ayaa ka soo muuqanaysa halkan -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = '/login.html';
+
+        let allFeesData = [];
+
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user.username) {
+            document.getElementById('userName').textContent = user.username;
+            document.getElementById('userRole').textContent = user.role;
+            document.getElementById('userInitial').textContent = user.username.charAt(0).toUpperCase();
+        }
+
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+        // Soo jiidista liiska ardayda iyadoo la isticmaalayo firstName iyo lastName
+        async function fetchStudentsDropdown() {
+            try {
+                const res = await fetch('/api/students', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const result = await res.json();
+                
+                const studentsList = Array.isArray(result) ? result : (result.data || result.students || []);
+                
+                const select = document.getElementById('studentName');
+                select.innerHTML = '<option value="">-- Dooro Arday --</option>';
+                
+                studentsList.forEach(student => {
+                    // Halkan waxaa laga soo akhrinayaa firstName iyo lastName oo ku jira Schema-gaaga
+                    const firstName = student.firstName || '';
+                    const lastName = student.lastName || '';
+                    const fullName = `${firstName} ${lastName}`.trim();
+                    
+                    if(fullName) {
+                        select.innerHTML += `<option value="${fullName}">${fullName}</option>`;
+                    }
+                });
+            } catch (err) {
+                console.error('Error fetching students dropdown:', err);
+            }
+        }
+
+        // Soo jiidista Xogta Lacagaha
+        async function fetchFees() {
+            try {
+                const res = await fetch('/api/fees', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if(data.success) {
+                    allFeesData = data.data || [];
+                    updateCards(allFeesData);
+                    renderTable(allFeesData);
+                }
+            } catch (err) {
+                console.error('Error fetching fees:', err);
+            }
+        }
+
+        // Cusboonaysiinta Kaararka Wadarta
+        function updateCards(data) {
+            let paid = 0, pending = 0, unpaid = 0;
+            data.forEach(item => {
+                const amt = Number(item.amount || 0);
+                const status = item.status || 'Bixiyay';
+                if(status === 'Bixiyay') paid += amt;
+                else if(status === 'Sugaya') pending += amt;
+                else if(status === 'Aan Bixin') unpaid += amt;
+            });
+
+            document.getElementById('totalPaidDisplay').textContent = `$${paid}`;
+            document.getElementById('totalPendingDisplay').textContent = `$${pending}`;
+            document.getElementById('totalUnpaidDisplay').textContent = `$${unpaid}`;
+        }
+
+        // Soo bandhigida Miiska
+        function renderTable(data) {
+            const tbody = document.getElementById('feesTableBody');
+            tbody.innerHTML = '';
+            data.forEach(fee => {
+                const status = fee.status || 'Bixiyay';
+                let badgeClass = 'bg-success';
+                if(status === 'Sugaya') badgeClass = 'bg-warning text-dark';
+                if(status === 'Aan Bixin') badgeClass = 'bg-danger';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="fw-semibold">${fee.studentName || fee.name || ''}</td>
+                        <td>$${fee.amount}</td>
+                        <td>${fee.month}</td>
+                        <td><span class="badge ${badgeClass}">${status}</span></td>
+                        <td class="small text-muted">${new Date(fee.date || fee.createdAt || Date.now()).toLocaleDateString()}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Kala-soocidda (Filtering)
+        function filterFees(category) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if(category === 'All') {
+                renderTable(allFeesData);
+            } else {
+                const filtered = allFeesData.filter(item => (item.status || 'Bixiyay') === category);
+                renderTable(filtered);
+            }
+        }
+
+        // Keydinta Lacagta Cusub
+        document.getElementById('feeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const studentName = document.getElementById('studentName').value;
+            const amount = document.getElementById('feeAmount').value;
+            const month = document.getElementById('feeMonth').value;
+            const status = document.getElementById('feeStatus').value;
+
+            if(!studentName) {
+                alert('Fadlan dooro arday sax ah oo ka tirsan liiska!');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/fees', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ studentName, amount, month, status })
+                });
+                const data = await res.json();
+                if(data.success || res.ok) {
+                    alert('Waa la diiwaangeliyay!');
+                    document.getElementById('feeForm').reset();
+                    fetchFees();
+                } else {
+                    alert(data.message || 'Cillad ayaa dhacday');
+                }
+            } catch (err) {
+                console.error('Error saving fee:', err);
+            }
+        });
+
+        // Ku shub ardayda dropdown-ka iyo lacagaha markuu boggu furmo
+        fetchStudentsDropdown();
+        fetchFees();
+
+        const handleLogout = async () => {
+            localStorage.clear();
+            window.location.href = '/login.html';
+        };
+
+        document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+        const logoutDropdown = document.getElementById('logoutBtnDropdown');
+        if(logoutDropdown) logoutDropdown.addEventListener('click', handleLogout);
+    </script>
+</body>
+</html>

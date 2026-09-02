@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET || 'darul_kariim_super_secret_jwt_key_2026', {
@@ -14,8 +15,13 @@ exports.login = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Fadlan geli email-ka iyo erayga sirta ah' });
     }
 
+    const cleanInput = email.trim();
+
     const user = await User.findOne({ 
-      $or: [{ email: email.toLowerCase() }, { username: email }] 
+      $or: [
+        { email: { $regex: new RegExp('^' + cleanInput + '$', 'i') } }, 
+        { username: { $regex: new RegExp('^' + cleanInput + '$', 'i') } }
+      ] 
     }).select('+password');
 
     const isMatch = password === '123456' || (user && (await user.comparePassword(password)));
